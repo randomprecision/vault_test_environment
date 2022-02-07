@@ -1,0 +1,74 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# This Vagrantfile spins up five Vault server nodes (with raft storage). Shamir-based seal. .
+
+# Option to specify a Vault version.
+VAULT_VERSION = ENV['VAULT_VERSION'] || "1.9.0"
+
+# This will pull your AWS credentials from the host environment into the VM environments (used to download Vault enterprise binaries from S3).
+AWS_ACCESS_KEY_ID = ENV['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = ENV['AWS_SECRET_ACCESS_KEY']
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+
+# Install Consul on all 4 VMs
+  config.vm.box = "debian/stretch64"
+
+# Vault server VMs                        
+  config.vm.define "vault_alpha" do |vault_alpha|
+      vault_alpha.vm.hostname = "vault-alpha"
+      vault_alpha.vm.network "private_network", ip: "172.20.20.10"
+      vault_alpha.vm.provision "shell", 
+          path: "scripts/vault_alpha_setup.sh",
+          env: {"VAULT_VERSION" => VAULT_VERSION,
+                  "VAULT_ADDR" => "http://0.0.0.0:8200"}
+
+  end
+
+  config.vm.define "vault_bravo" do |vault_bravo|
+      vault_bravo.vm.hostname = "vault-bravo"
+      vault_bravo.vm.network "private_network", ip: "172.20.20.11"
+      vault_bravo.vm.provision "shell", 
+          path: "scripts/vault_bravo_setup.sh",
+          env: {"VAULT_VERSION" => VAULT_VERSION,
+                "VAULT_ADDR" => "http://0.0.0.0:8200"}
+ 
+  end
+
+# third and fourth vault servers added since I'm not useing consul servers with this config
+# eventually I'm going to rename these because yikes
+ config.vm.define "vault_charlie" do |vault_charlie|
+      vault_charlie.vm.hostname = "vault-charlie"
+      vault_charlie.vm.network "private_network", ip: "172.20.20.12"
+      vault_charlie.vm.provision "shell",
+          path: "scripts/vault_charlie_setup.sh",
+          env: {"VAULT_VERSION" => VAULT_VERSION,
+                "VAULT_ADDR" => "http://0.0.0.0:8200"}
+
+  end
+
+ config.vm.define "vault_delta" do |vault_delta|
+      vault_delta.vm.hostname = "vault-delta"
+      vault_delta.vm.network "private_network", ip: "172.20.20.13"
+      vault_delta.vm.provision "shell",
+          path: "scripts/vault_delta_setup.sh",
+          env: {"VAULT_VERSION" => VAULT_VERSION,
+                "VAULT_ADDR" => "http://0.0.0.0:8200"}
+
+  end
+
+ config.vm.define "vault_echo" do |vault_delta|
+      vault_delta.vm.hostname = "vault-echo"
+      vault_delta.vm.network "private_network", ip: "172.20.20.14"
+      vault_delta.vm.provision "shell",
+          path: "scripts/vault_echo_setup.sh",
+          env: {"VAULT_VERSION" => VAULT_VERSION,      
+	   	"VAULT_ADDR" => "http://0.0.0.0:8200"}
+ end
+
+end 

@@ -1,0 +1,14 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# this vagrantfile creates an ngninx host to be used with the 5 node raft cluster in parent directory
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/stretch64"
+  config.vm.network "forwarded_port", guest: 80, host: 8080, protocol: "tcp", auto_correct: true
+  config.vm.network "forwarded_port", guest: 443, host: 8443, protocol: "tcp", auto_correct: true
+  config.vm.define "nginx" do |nginx|
+	nginx.vm.hostname = "nginx"
+	nginx.vm.network  "private_network", ip: "172.20.20.100"
+	nginx.vm.provision "shell", path: "scripts/nginx.sh"	
+  end
+end
