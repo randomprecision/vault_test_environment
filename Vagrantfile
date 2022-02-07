@@ -6,12 +6,8 @@
 # MANDATORY license variable - you MUST specify something here or install will fail. 
 VAULT_LICENSE = ENV['VAULT_LICENSE'] || "CHANGEME"
 # Option to specify a Consul & Vault version.
-CONSUL_VERSION = ENV['CONSUL_VERSION'] || "1.10.1"
-VAULT_VERSION = ENV['VAULT_VERSION'] || "1.8.1"
-
-# This will pull your AWS credentials from the host environment into the VM environments (used to download Vault enterprise binaries from S3).
-AWS_ACCESS_KEY_ID = ENV['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY = ENV['AWS_SECRET_ACCESS_KEY']
+CONSUL_VERSION = ENV['CONSUL_VERSION'] || "1.11.2"
+VAULT_VERSION = ENV['VAULT_VERSION'] || "1.9.3"
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -36,7 +32,7 @@ config.ssh.forward_agent = true
                 "VAULT_LICENSE" => VAULT_lICENSE,
                  "CONSUL_VERSION" => CONSUL_VERSION,
                  "CONSUL_NODE" => "primary_consul_client",
-                  "VAULT_ADDR" => "http://0.0.0.0:8200"}
+                 "VAULT_ADDR" => "http://0.0.0.0:8200"}
   
   end
 
@@ -46,8 +42,7 @@ config.ssh.forward_agent = true
       vault_secondary.vm.provision "shell", 
           path: "vault-replication-shamir/scripts/vault_secondary_setup.sh",
           env: {"VAULT_VERSION" => VAULT_VERSION,
-                "AWS_ACCESS_KEY_ID" => AWS_ACCESS_KEY_ID,
-                "AWS_SECRET_ACCESS_KEY" => AWS_SECRET_ACCESS_KEY,
+                "VAULT_LICENSE" => VAULT_LICENSE,
                 "CONSUL_VERSION" => CONSUL_VERSION,
                 "CONSUL_NODE" => "secondary_consul_client",
                 "VAULT_ADDR" => "http://0.0.0.0:8200"}

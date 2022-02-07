@@ -1,5 +1,7 @@
 ## What is this?
 
+This is my version of the vault_test_environment vagrant sandbox passed down to me from benz0. I have removed some stuff and added other stuff. I plan to add even more stuff so clone this periodically if you want to use some of the changes. 
+
 This Vagrantfile will spin up four "debian/stretch64" VMs: 
 
 * 2 Vault+prem servers (with Consul client)
@@ -14,15 +16,32 @@ For logs:
 * Vault: /var/log/vault.log
 * Consul: /var/log/consul.log
 
+## Directory Contents
+
+`vault-replication-shamir` - sets up two consul and two vault nodes using shamir seal
+`raft` - EXPERIMENTAL - sets up a 5 node raft cluster 
+`nginx` - EXPERIMENTAL - nginx load balancer VM with basic config. This probably won't work for you OOTB. 
+`replication-vault-hsm` - sets up two consul nodes and two vault nodes using softHSM and autounseal 
+
+## Upcoming features 
+
+- integrated self-signed SSL certs w/ trust
+
 ## Pre-req
 
-On host machine, make sure you have set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables that allow you to download Vault+prem binaries. Or [use envchain](https://github.com/sorah/envchain) with an environment that has those variables (i.e. `envchain myenv vagrant up`).
+** You MUST have a vault license defined in the Vagrant file in the VAULT_LICENSE variable. **
 
 To specify Consul and Vault versions, set the `CONSUL_VERSION` AND `VAULT_VERSION` environment variables on the host before running `vagrant up`. The defaults are in the Vagrantfile. 
 
 ## Spin up VMs
 
-Run `vagrant up` and then ssh into the `vault_primary` and `vault_secondary` to initialize Vault and then set up replication. 
+You want to spin up the consul VMs first: 
+
+`vagrant up consul_server_primary consul_server_secondary` 
+then once those have finished coming up 
+`vagrant up vault_primary vault_secondary` 
+
+Then ssh into the `vault_primary` and `vault_secondary` to initialize Vault and then set up replication. 
 
 Easy to initialize with:
 
