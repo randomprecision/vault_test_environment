@@ -36,7 +36,7 @@ subdirectories:
 
 ## Pre-req
 
-** You MUST have a vault license defined in the Vagrant file in the VAULT_LICENSE variable. **
+**You MUST have a vault license defined in the Vagrant file in the `VAULT_LICENSE` variable.**
 
 To specify Consul and Vault versions, set the `CONSUL_VERSION` AND `VAULT_VERSION` environment variables on the host before running `vagrant up`. The defaults are in the Vagrantfile. 
 
