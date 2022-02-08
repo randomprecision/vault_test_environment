@@ -58,8 +58,10 @@ Then ssh into the `vault_primary` and `vault_secondary` to initialize Vault and 
 
 Easy to initialize with:
 
-- export VAULT_ADDR="http://:8200"
-- vault operator init -key-shares=1 -key-threshold=1 -format=json > keys.txt
-- cat keys.txt
+```
+export VAULT_ADDR="http://:8200"
+vault operator init -key-shares=1 -key-threshold=1 -format=json > keys.txt
+cat keys.txt
+```
 
 Then follow https://www.vaultproject.io/guides/replication.html to set up replication.
