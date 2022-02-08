@@ -24,6 +24,7 @@ For logs:
 subdirectories:
 
   `raft` - EXPERIMENTAL - sets up a 5 node raft cluster 
+  
   `nginx` - EXPERIMENTAL - nginx load balancer VM with basic config. This probably won't work for you without some changes. 
 
 `replication-vault-hsm` - sets up two consul nodes and two vault nodes using softHSM and autounseal 
