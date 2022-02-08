@@ -5,11 +5,7 @@
 
 # Option to specify a Vault version.
 VAULT_VERSION = ENV['VAULT_VERSION'] || "1.9.0"
-
-# This will pull your AWS credentials from the host environment into the VM environments (used to download Vault enterprise binaries from S3).
-AWS_ACCESS_KEY_ID = ENV['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY = ENV['AWS_SECRET_ACCESS_KEY']
-
+VAULT_LICENSE = ENV['VAULT_LICENSE'] || "CHANGEME"
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -26,7 +22,8 @@ Vagrant.configure("2") do |config|
       vault_alpha.vm.provision "shell", 
           path: "scripts/vault_alpha_setup.sh",
           env: {"VAULT_VERSION" => VAULT_VERSION,
-                  "VAULT_ADDR" => "http://0.0.0.0:8200"}
+                "VAULT_LICENSE" => VAULT_LICENSE,
+                "VAULT_ADDR" => "http://0.0.0.0:8200"}
 
   end
 
@@ -36,6 +33,7 @@ Vagrant.configure("2") do |config|
       vault_bravo.vm.provision "shell", 
           path: "scripts/vault_bravo_setup.sh",
           env: {"VAULT_VERSION" => VAULT_VERSION,
+                "VAULT_LICENSE" => VAULT_LICENSE,
                 "VAULT_ADDR" => "http://0.0.0.0:8200"}
  
   end
@@ -48,6 +46,7 @@ Vagrant.configure("2") do |config|
       vault_charlie.vm.provision "shell",
           path: "scripts/vault_charlie_setup.sh",
           env: {"VAULT_VERSION" => VAULT_VERSION,
+                "VAULT_LICENSE" => VAULT_LICENSE,
                 "VAULT_ADDR" => "http://0.0.0.0:8200"}
 
   end
@@ -58,6 +57,7 @@ Vagrant.configure("2") do |config|
       vault_delta.vm.provision "shell",
           path: "scripts/vault_delta_setup.sh",
           env: {"VAULT_VERSION" => VAULT_VERSION,
+                "VAULT_LICENSE" => VAULT_LICENSE,
                 "VAULT_ADDR" => "http://0.0.0.0:8200"}
 
   end
@@ -67,7 +67,8 @@ Vagrant.configure("2") do |config|
       vault_delta.vm.network "private_network", ip: "172.20.20.14"
       vault_delta.vm.provision "shell",
           path: "scripts/vault_echo_setup.sh",
-          env: {"VAULT_VERSION" => VAULT_VERSION,      
+          env: {"VAULT_VERSION" => VAULT_VERSION,
+                "VAULT_LICENSE" => VAULT_LICENSE,      
 	   	"VAULT_ADDR" => "http://0.0.0.0:8200"}
  end
 
