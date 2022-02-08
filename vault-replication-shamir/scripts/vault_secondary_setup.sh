@@ -79,6 +79,6 @@ fi
 
 
 # Add envar for VAULT_ADDR and start Vault server on Vault nodes
-echo "export VAULT_ADDR=http://:8200" >> ~/.bashrc
+echo "export VAULT_ADDR=http://:8200" >> /home/vagrant/.bashrc
 echo "Starting Vault server ..."
 vault server -log-level=debug -config=/etc/vault/vault.hcl &> /var/log/vault.log &
