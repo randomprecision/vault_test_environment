@@ -1,6 +1,6 @@
 ## What is this?
 
-<sub>This is my (sanitized) version of the `vault_test_environment` vagrant sandbox passed down to me from benz0, who had it passed down to him from someone else. I have removed some stuff and added other stuff in an effort to make this more current and useful. I plan to add more stuff to this (I use this all the time for Vault support) so check in from time to time if you're interested in the changes. I've removed all proprietary information from here so I'm comfortable flipping the repo over to public, but please let me know if you find something here that should not be. </sub>
+<sub>This is my (sanitized) version of the `vault_test_environment` vagrant sandbox passed down to me from benz0, who had it passed down to him from someone else. I have removed some things and added other stuff in an effort to make this more current and useful. I plan to add more to this (I use this all the time for Vault support) so check in from time to time if you're interested in the changes. I've removed all proprietary information from here so I'm comfortable flipping the repo over to public, but PLEASE let me know if you find something here that should not be. </sub>
 
 ---
 
