@@ -28,7 +28,7 @@ subdirectories:
 `replication-vault-hsm` - sets up two consul nodes and two vault nodes using softHSM and autounseal 
 
 
-## Upcoming features 
+## Upcoming Features 
 
 - integrated self-signed SSL certs w/ trust
 - file handler for `VAULT_LICENSE`
