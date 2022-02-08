@@ -4,6 +4,8 @@
 
 ---
 
+## **You MUST have a valid Vault Enterprise license to use this vagrant environment**
+
 This Vagrantfile will spin up four "debian/stretch64" VMs: 
 
 * 2 Vault+prem servers (with Consul client)
