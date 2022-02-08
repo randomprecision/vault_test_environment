@@ -29,7 +29,7 @@ config.ssh.forward_agent = true
       vault_primary.vm.provision "shell", 
           path: "vault-replication-shamir/scripts/vault_setup.sh",
           env: {"VAULT_VERSION" => VAULT_VERSION,
-                "VAULT_LICENSE" => VAULT_lICENSE,
+                "VAULT_LICENSE" => VAULT_LICENSE,
                  "CONSUL_VERSION" => CONSUL_VERSION,
                  "CONSUL_NODE" => "primary_consul_client",
                  "VAULT_ADDR" => "http://0.0.0.0:8200"}
