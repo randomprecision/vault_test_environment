@@ -31,6 +31,7 @@ subdirectories:
 ## Upcoming features 
 
 - integrated self-signed SSL certs w/ trust
+- file handler for `VAULT_LICENSE`
 - getting `vault_init.py` script to work properly and integrate it into the vagrants
 - getting `nginx` working and complete integrating it into the `raft` vagrant 
 
