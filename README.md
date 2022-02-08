@@ -29,7 +29,8 @@ For logs:
 
 ## Upcoming features 
 
-- integrated self-signed SSL certs w/ trust
+- integrated (likely) temporary self-signed SSL certs w/ trust
+- getting vault_init python script to work properly and integrate it into the vagrants
 
 ## Pre-req
 
