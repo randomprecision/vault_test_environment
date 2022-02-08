@@ -22,6 +22,7 @@ For logs:
 
 `vault-replication-shamir` - sets up two consul and two vault nodes using shamir seal
 subdirectories:
+
   `raft` - EXPERIMENTAL - sets up a 5 node raft cluster 
   `nginx` - EXPERIMENTAL - nginx load balancer VM with basic config. This probably won't work for you without some changes. 
 
