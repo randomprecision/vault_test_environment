@@ -1,4 +1,4 @@
-* What is this? *
+## What is this? 
 
 This is a basic 5 node raft cluster using shamir. It's good for setting up DR replications that don't require consul. 
 
