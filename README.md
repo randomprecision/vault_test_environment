@@ -47,7 +47,7 @@ For logs:
 
 subdirectories:
 
-* `raft` - EXPERIMENTAL - sets up a 5 node raft cluster 
+* `raft` sets up a 3 vault nodes using raft 
 
 * `nginx` - EXPERIMENTAL - nginx load balancer VM with basic config. This probably won't work for you without some changes. 
 
@@ -56,7 +56,7 @@ subdirectories:
 
 ## Upcoming Features 
 
-- integrated self-signed SSL certs w/ trust
+- integrated self-signed SSL certs w/ trust (eh this might never happen as this will eventually be replaced with terraform)
 - getting `vault_init.py` script to work properly and integrate it into the vagrants
 - getting `nginx` working and complete integrating it into the `raft` vagrant 
 
