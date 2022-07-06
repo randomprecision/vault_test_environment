@@ -1,18 +1,15 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# This Vagrantfile spins up two Vault server nodes (with Consul client) and two Consul server nodes. Meant to be used to reproduce replication with Shamir-based Vault.
-
-# MANDATORY license variable - you MUST specify something here or install will fail. 
-VAULT_LICENSE = ENV['VAULT_LICENSE'] || "CHANGEME"
-# Option to specify a Consul & Vault version.
-CONSUL_VERSION = ENV['CONSUL_VERSION'] || "1.11.2"
-VAULT_VERSION = ENV['VAULT_VERSION'] || "1.9.3"
+VAULT_VERSION = ENV['VAULT_VERSION'] || "$VAULT_VERSION"
+VAULT_LICENSE = ENV['VAULT_LICENSE'] || "$VAULT_LICENSE"
+CONSUL_VERSION = ENV['CONSUL_VERSION'] || "$CONSUL_VERSION"
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+
 Vagrant.configure("2") do |config|
 #ssh goodness
 #config.ssh.insert_key = false

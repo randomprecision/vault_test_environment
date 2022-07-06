@@ -4,20 +4,41 @@
 
 ---
 
+Last major update - 6 Jul 2022
+
 ## **You MUST have a valid Vault Enterprise license to use this vagrant environment**
+
+Set it using `export VAULT_LICENSE=$(cat ~/your-license-file.hclic)` or similar.
+
+## **You MUST specify a version for Vault and Consul as an environment variale** 
+
+Eg: 
+
+```
+export VAULT_LICENSE=$(cat ~/Downloads/vault-enterprise.hclic)
+export VAULT_VERSION=1.10.4
+export CONSUL_VERSION=1.11.2
+```
+
 
 This Vagrantfile will spin up four "debian/stretch64" VMs with shamir seal: 
 
-* 2 Vault+prem servers (with Consul client)
+* 2 Vault+prem servers (with Consul agent)
 * 2 Consul servers
 
 The Vault+prem servers each use a Consul storage backend. The goal is to simulate a basic 2-cluster replication setup of Vault (1 Vault server & 1 Consul server per cluster).
 
 Vagrant will spin up the VMs, provision them, and start up both Vault and Consul. It will also join the client nodes to their respective Consul server. 
 
+**You will want to start the consul servers BEFORE you start the vault servers** 
+
+Eg: 
+
+`vagrant up consul_server_primary consul_server_secondary && sleep 5 && vagrant up vault_primary vault_secondary`
+
 For logs:
 
-* Vault: /var/log/vault.log
+* Vault: `journalctl -u vault` 
 * Consul: /var/log/consul.log
 
 ## Directory Contents
@@ -36,7 +57,6 @@ subdirectories:
 ## Upcoming Features 
 
 - integrated self-signed SSL certs w/ trust
-- file handler for `VAULT_LICENSE`
 - getting `vault_init.py` script to work properly and integrate it into the vagrants
 - getting `nginx` working and complete integrating it into the `raft` vagrant 
 

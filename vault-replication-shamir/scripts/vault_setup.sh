@@ -77,8 +77,24 @@ elif [ ${CONSUL_NODE} = "secondary_consul_client" ]; then
 	sleep 10
 fi
 
-
 # Add envar for VAULT_ADDR and start Vault server on Vault nodes
+echo "Installing unit file and starting Vault ..."
+cat <<- EOF > /etc/systemd/system/vault.service
+[Unit]
+Description=Vault
+Documentation=https://www.vault.io/
+[Service]
+ExecStart=/usr/local/bin/vault server -config=/etc/vault/vault.hcl
+ExecReload=/bin/kill -HUP $MAINPID
+LimitNOFILE=65536
+LogsDirectory=/var/log/vault
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable vault.service
+systemctl start vault.service
+
 echo "export VAULT_ADDR='http://127.0.0.1:8200'" >> /etc/profile.d/vaultvars.sh
-echo "Starting Vault server ..."
-vault server -log-level=debug -config=/etc/vault/vault.hcl &> /var/log/vault.log &
+echo "complete -o nospace -C /usr/local/bin/vault vault" >> /home/vagrant/.bashrc

@@ -24,13 +24,15 @@ echo "Writing Vault configuration file"
 sudo mkdir /etc/vault 
 
 #make the license happen
-if [[ ${VAULT_LICENSE} == "CHANGEME" ]]
-	then echo "You did not specify a value for VAULT_LICENSE in the Vagrantfile. You now MUST manually add the license to /etc/vault/vault.hclic on this host or vault will not start. You will have to manually kill vault and start it again as well since there is no daemon file. I suggest using a screen session. This is why you really should set the VAULT_LICENSE variable."
+if [[ ${VAULT_LICENSE} == "" ]]
+	then echo "You did not specify a value for the VAULT_LICENSE environment variable prior to running vagrant up. You now MUST manually add the license to /etc/vault/vault.hclic on this host or vault will not start. You will have to manually kill vault and start it again as well since there is no daemon file. I suggest using a screen session. This is why you really should set the VAULT_LICENSE variable."
 	else echo ${VAULT_LICENSE} > /etc/vault/vault.hclic
 fi
-# make the raft storage directory
-mkdir /tmp/raft-node
 
+# make the raft storage directory
+mkdir -p /opt/vault/data
+
+# make the vault config
 cat <<- EOF > /etc/vault/vault.hcl
 disable_mlock = true
 ui = true
@@ -40,8 +42,8 @@ listener "tcp" {
 }
 
 storage "raft" {
-path = "/tmp/raft-node/"
-node_id = "vault-alpha-alpn"
+path = "/opt/vault/data"
+node_id = "vault-alpha"
 }
 cluster_addr="http://172.20.20.10:8201"
 api_addr="http://172.20.20.10:8200"
@@ -49,17 +51,40 @@ cluster_name="vault-westylab-local"
 
 license_path = "/etc/vault/vault.hclic"
 log_level = "TRACE"
+# uncomment the below and add the token to enable transit unseal
+#seal "transit" {
+#  address = ""
+#  disable_renewal = "false"
+#  key_name = "autounseal"
+#  mount_path = "transit/"
+#  tls_skip_verify = "false"
+#  token = ""
+#}
 EOF
 
+# make entries to the host file for nodes. This is handy for SSL implementation down the road
 echo "172.20.20.10 vault-alpha.westylab.local" >> /etc/hosts
 echo "172.20.20.11 vault-bravo.westylab.local" >> /etc/hosts
 echo "172.20.20.12 vault-charlie.westylab.local" >> /etc/hosts
-echo "172.20.20.13 vault-delta.westylab.local" >> /etc/hosts
-echo "172.20.20.14 vault-echo.westylab.local" >> /etc/hosts
-echo "172.20.20.100 vault.westylab.local" >> /etc/hosts
 
-# Start Vault server on Vault nodes
-export VAULT_ADDR="http://127.0.0.1"
-echo "Starting Vault server ..."
-vault server -log-level=debug -config=/etc/vault/vault.hcl &> /var/log/vault.log &
+# create the vault service unit file so we don't have to resort to screen sessions anymore
+echo "Installing unit file and starting Vault ..."
+cat <<- EOF > /etc/systemd/system/vault.service
+[Unit]
+Description=Vault
+Documentation=https://www.vault.io/
+[Service]
+ExecStart=/usr/local/bin/vault server -config=/etc/vault/vault.hcl
+ExecReload=/bin/kill -HUP $MAINPID
+LimitNOFILE=65536
+LogsDirectory=/var/log/vault
+[Install]
+WantedBy=multi-user.target 
+EOF
+
+systemctl daemon-reload
+systemctl enable vault.service
+systemctl start vault.service
+
 echo "export VAULT_ADDR=http://127.0.0.1:8200" >> /home/vagrant/.bashrc
+echo "complete -o nospace -C /usr/local/bin/vault vault" >> /home/vagrant/.bashrc

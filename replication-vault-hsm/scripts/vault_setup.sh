@@ -58,11 +58,13 @@ export VAULT_HSM_SLOT=$(sudo softhsm2-util --show-slots | grep -m 1 Slot | cut -
 # Write Vault configuration file where needed
 echo "Writing Vault configuration file"
 
-# make the license happen -sfw
-if [[ ${VAULT_LICENSE} == "CHANGEME" ]]
-	then echo "You did not specify a value for VAULT_LICENSE in the Vagrantfile. You now MUST manually add the license to /etc/vault/vault.hclic on this host or vault will not start. You will have to manually kill vault and start it again as well since there is no daemon file. I suggest using a screen session. This is why you really should set the VAULT_LICENSE variable."
-	else echo ${VAULT_LICENSE} > /etc/vault/vault.hclic
-fi
+# make the license happen 
+#if [[ ${VAULT_LICENSE} == "CHANGEME" ]]
+#	then echo "You did not specify a value for VAULT_LICENSE in the Vagrantfile. You now MUST manually add the license to /etc/vault/vault.hclic on this host or vault will not start. You will have to manually kill vault and start it again as well since there is no daemon file. I suggest using a screen session. This is why you really should set the VAULT_LICENSE variable."
+#	else echo ${VAULT_LICENSE} > /etc/vault/vault.hclic
+#fi
+
+echo ${VAULT_LICENSE} > /etc/vault/vault.hclic
 
 cat <<- EOF > /etc/vault/vault.hcl
 disable_mlock = true
@@ -112,11 +114,29 @@ fi
 
 sleep 10
 
-# Start Vault server 
-echo "Starting Vault server ..."
-vault server -log-level=debug -config=/etc/vault/vault.hcl &> /var/log/vault.log &
-
 # Set Vault environment vars
 echo "Setting Vault address"
 echo "export VAULT_ADDR='http://127.0.0.1:8200'" >> /etc/profile.d/vaultvars.sh
 echo "export VAULT_HSM_SLOT='$(sudo softhsm2-util --show-slots | grep -m 1 Slot | cut -c6-)'" >> /etc/profile.d/vaultvars.sh
+
+# create the vault service unit file so we don't have to resort to screen sessions anymore
+echo "Installing unit file and starting Vault ..."
+cat <<- EOF > /etc/systemd/system/vault.service
+[Unit]
+Description=Vault
+Documentation=https://www.vault.io/
+[Service]
+ExecStart=/usr/local/bin/vault server -config=/etc/vault/vault.hcl
+ExecReload=/bin/kill -HUP $MAINPID
+LimitNOFILE=65536
+LogsDirectory=/var/log/vault
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable vault.service
+systemctl start vault.service
+
+echo "export VAULT_ADDR=http://127.0.0.1:8200" >> /home/vagrant/.bashrc
+echo "complete -o nospace -C /usr/local/bin/vault vault" >> /home/vagrant/.bashrc
