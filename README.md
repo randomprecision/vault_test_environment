@@ -62,19 +62,24 @@ subdirectories:
 
 ## Pre-req
 
-**You MUST have a vault license defined in the Vagrant file in the `VAULT_LICENSE` variable.**
+**You MUST have a vault license defined in the `VAULT_LICENSE` variable.**
+**You need to specify a value for `VAULT_VERSION` and `CONSUL_VERSION`** 
+(it may be helpful to just put those two in your `.bashrc` or `.zshrc` files)
 
-To specify Consul and Vault versions, set the `CONSUL_VERSION` AND `VAULT_VERSION` environment variables on the host before running `vagrant up`. The defaults are in the Vagrantfile. 
+To specify Consul and Vault versions, set the `CONSUL_VERSION` AND `VAULT_VERSION` environment variables on the host before running `vagrant up`. 
 
 ## Spin up VMs
 
 You want to spin up the consul VMs first: 
 
-`vagrant up consul_server_primary consul_server_secondary` 
-then once those have finished coming up 
-`vagrant up vault_primary vault_secondary` 
+`vagrant up consul_server_primary consul_server_secondary && sleep 5 && vagrant up vault_primary vault_secondary`
 
 Then ssh into the `vault_primary` and `vault_secondary` to initialize Vault and then set up replication. 
+
+`vagrant ssh vault_primary` 
+`vagrant ssh vault_secondary` 
+
+etc. 
 
 Easy to initialize with:
 
